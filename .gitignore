@@ -1,0 +1,13 @@
+# Visual Studio
+.vs/
+[Bb]in/
+[Oo]bj/
+*.user
+*.userosscache
+*.sln.docarchives
+
+# Archivos de base de datos (para no subir tu app.db local)
+*.db
+
+# Logs
+logs/
