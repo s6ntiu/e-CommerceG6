@@ -1,3 +1,4 @@
+using Products.API.Services; // Arriba de todo
 using Microsoft.AspNetCore.Http.HttpResults;
 using System.Text.Json.Serialization;
 
@@ -48,4 +49,7 @@ internal partial class AppJsonSerializerContext : JsonSerializerContext
 {
 
 }
-
+// Agregá esta línea:
+// builder.Services.AddScoped<IProductService, ProductService>();
+// var app = builder.Build();
+// ...
