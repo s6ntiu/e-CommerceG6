@@ -19,8 +19,6 @@
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="DTOs\" />
-    <Folder Include="ExceptionHandlers\" />
-    <Folder Include="Exceptions\" />
     <Folder Include="logs\" />
     <Folder Include="Services\" />
   </ItemGroup>
