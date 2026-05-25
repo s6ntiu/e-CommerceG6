@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Http.HttpResults;
-using Products.API.ExceptionHandlers;
+using ECommerce.Shared.ExceptionHandlers;
 using System.Text.Json.Serialization;
 
 // Cambié SlimBuilder por el Builder normal que es el estándar para estos TPs

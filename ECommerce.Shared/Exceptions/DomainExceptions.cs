@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Products.API.Exceptions
+namespace ECommerce.Shared.Exceptions
 {
     public class NotFoundException : Exception
     {
