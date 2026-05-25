@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
-using Products.API.Exceptions;
+using ECommerce.Shared.Exceptions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Products.API.ExceptionHandlers
+namespace ECommerce.Shared.ExceptionHandlers
 {
     public class BusinessRuleExceptionHandler : IExceptionHandler
     {

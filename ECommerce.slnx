@@ -1,7 +1,8 @@
 <Solution>
-  <Project Path="Order.API/Order.API.csproj" Id="d1dec8e9-e630-44be-9df3-84c73fad1b22" />
   <Project Path="Cart.API/Cart.API.csproj" Id="e3d52a7f-9a75-4dbe-a7c8-cc1acd465c36" />
+  <Project Path="ECommerce.Shared/ECommerce.Shared.csproj" Id="0dab0f95-2ca6-4aec-82b1-eb7024dae49b" />
   <Project Path="Notifications.API/Notifications.API.csproj" Id="299a32bb-a11b-41d3-a298-1769a5147182" />
+  <Project Path="Order.API/Order.API.csproj" Id="d1dec8e9-e630-44be-9df3-84c73fad1b22" />
   <Project Path="Products.API/Products.API.csproj" />
   <Project Path="User.API/User.API.csproj" Id="42591273-0df1-4b72-a4a2-8d28001bfb89" />
 </Solution>
