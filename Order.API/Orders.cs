@@ -2,5 +2,9 @@
 {
     public class Orders
     {
+        static void (null)
+            {
+            Console.WriteLine( );
+            }
     }
 }
