@@ -1,71 +1,60 @@
-using Microsoft.AspNetCore.Http.HttpResults;
-using ECommerce.Shared.ExceptionHandlers;
-using System.Text.Json.Serialization;
+using ECommerce.Shared.ExceptionHandlers; // Tus guardias compartidos
+using Serilog; // El paquete de logs que acabás de instalar
 
-// Cambié SlimBuilder por el Builder normal que es el estándar para estos TPs
-var builder = WebApplication.CreateBuilder(args);
+// 1. ARRANCAMOS SERILOG ANTES QUE NADA
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-builder.Services.ConfigureHttpJsonOptions(options =>
+try
 {
-    options.SerializerOptions.TypeInfoResolverChain.Insert(0, AppJsonSerializerContext.Default);
-});
+    Log.Information("Iniciando Products.API...");
 
-builder.Services.AddOpenApi();
+    var builder = WebApplication.CreateBuilder(args);
 
-// Servicios para que funcionen los controladores del E-Commerce
-builder.Services.AddControllers();
+    // 2. CONFIGURAMOS SERILOG EN EL BUILDER (Guarda logs en consola y en un archivo de texto)
+    builder.Host.UseSerilog((context, services, configuration) => configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services)
+        .Enrich.FromLogContext()
+        .WriteTo.Console()
+        .WriteTo.File("logs/products-log-.txt", rollingInterval: RollingInterval.Day));
 
-// =====================================================================
-// 1. ACÁ CONTRATAMOS A TUS GUARDIAS (Siempre antes del builder.Build)
-// =====================================================================
-builder.Services.AddExceptionHandler<NotFoundExceptionHandler>();
-builder.Services.AddExceptionHandler<BusinessRuleExceptionHandler>();
-builder.Services.AddProblemDetails();
-// =====================================================================
+    builder.Services.AddControllers();
+    builder.Services.AddOpenApi();
 
-var app = builder.Build();
+    // 3. CONTRATAMOS A TUS GUARDIAS (Desde ECommerce.Shared)
+    builder.Services.AddExceptionHandler<NotFoundExceptionHandler>();
+    builder.Services.AddExceptionHandler<BusinessRuleExceptionHandler>();
+    builder.Services.AddProblemDetails();
 
-// =====================================================================
-// 2. ACÁ LOS PONEMOS A TRABAJAR (Siempre después del builder.Build)
-// =====================================================================
-app.UseExceptionHandler();
-// =====================================================================
+    // 4. AGREGAMOS EL SERVICIO DE HEALTH CHECKS
+    builder.Services.AddHealthChecks();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
+    var app = builder.Build();
+
+    // 5. PONEMOS A TRABAJAR A LOS GUARDIAS
+    app.UseExceptionHandler();
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.MapOpenApi();
+    }
+
+    app.MapControllers();
+
+    // 6. ACTIVAMOS LAS RUTAS DE HEALTH CHECK (Para cumplir con la pág 16 del PDF)
+    app.MapHealthChecks("/health");
+    app.MapHealthChecks("/health/ready");
+    app.MapHealthChecks("/health/live");
+
+    app.Run();
 }
-
-// --- Todo este bloque es el código de ejemplo que ya venía ---
-Todo[] sampleTodos =
-[
-    new(1, "Walk the dog"),
-    new(2, "Do the dishes", DateOnly.FromDateTime(DateTime.Now)),
-    new(3, "Do the laundry", DateOnly.FromDateTime(DateTime.Now.AddDays(1))),
-    new(4, "Clean the bathroom"),
-    new(5, "Clean the car", DateOnly.FromDateTime(DateTime.Now.AddDays(2)))
-];
-
-var todosApi = app.MapGroup("/todos");
-todosApi.MapGet("/", () => sampleTodos)
-        .WithName("GetTodos");
-todosApi.MapGet("/{id}", Results<Ok<Todo>, NotFound> (int id) =>
-    sampleTodos.FirstOrDefault(a => a.Id == id) is { } todo
-        ? TypedResults.Ok(todo)
-        : TypedResults.NotFound())
-    .WithName("GetTodoById");
-// -------------------------------------------------------------
-
-// =====================================================================
-// 3. ACTIVAMOS LOS CONTROLADORES (Fundamental para Mariano mañana)
-// =====================================================================
-app.MapControllers();
-
-app.Run();
-
-public record Todo(int Id, string? Title, DateOnly? DueBy = null, bool IsComplete = false);
-
-[JsonSerializable(typeof(Todo[]))]
-internal partial class AppJsonSerializerContext : JsonSerializerContext
+catch (Exception ex)
 {
+    Log.Fatal(ex, "La aplicación Products.API falló al iniciar de forma catastrófica.");
+}
+finally
+{
+    Log.CloseAndFlush();
 }
