@@ -1,3 +1,6 @@
+using Products.API.Services; // Arriba de todo
+using Microsoft.AspNetCore.Http.HttpResults;
+using System.Text.Json.Serialization;
 using ECommerce.Shared.ExceptionHandlers; // Tus guardias compartidos
 using Serilog; // El paquete de logs que acabás de instalar
 
@@ -31,6 +34,7 @@ try
     // 4. AGREGAMOS EL SERVICIO DE HEALTH CHECKS
     builder.Services.AddHealthChecks();
 
+    builder.Services.AddScoped<IProductService, ProductService>();
     var app = builder.Build();
 
     // 5. PONEMOS A TRABAJAR A LOS GUARDIAS
