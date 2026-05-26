@@ -1,10 +1,7 @@
-﻿namespace Products.API.Models
+﻿namespace Order.API
 {
     public class Orders
     {
-        static void (null)
-            {
-            Console.WriteLine( );
-            }
+
     }
 }
