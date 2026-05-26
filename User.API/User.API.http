@@ -1,6 +1,34 @@
-@User.API_HostAddress = http://localhost:5028
+### Probar el Registro Exitoso
+POST http://localhost:5028/api/users/register
+Content-Type: application/json
 
-GET {{User.API_HostAddress}}/weatherforecast/
-Accept: application/json
+{
+  "nombre": "Santi",
+  "apellido": "Balo",
+  "email": "santi@uba.ar",
+  "password": "Password123!"
+}
 
 ###
+
+### Probar el Registro Fallido (Email Duplicado)
+POST http://localhost:5028/api/users/register
+Content-Type: application/json
+
+{
+  "nombre": "Santi Duplicado",
+  "apellido": "Balo",
+  "email": "duplicado@uba.ar",
+  "password": "Password123!"
+}
+
+###
+
+### Probar el Login Exitoso
+POST http://localhost:5028/api/users/login
+Content-Type: application/json
+
+{
+  "email": "santi@uba.ar",
+  "password": "Password123!"
+}
