@@ -1,4 +1,4 @@
-﻿namespace Products.API.Models
+﻿namespace Notifications.API
 {
     public class Notifications
     {
