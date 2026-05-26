@@ -24,7 +24,8 @@ try
         .WriteTo.File("logs/products-log-.txt", rollingInterval: RollingInterval.Day));
 
     builder.Services.AddControllers();
-    builder.Services.AddOpenApi();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
 
     // 3. CONTRATAMOS A TUS GUARDIAS (Desde ECommerce.Shared)
     builder.Services.AddExceptionHandler<NotFoundExceptionHandler>();
@@ -42,7 +43,8 @@ try
 
     if (app.Environment.IsDevelopment())
     {
-        app.MapOpenApi();
+        app.UseSwagger();
+        app.UseSwaggerUI();
     }
 
     app.MapControllers();
