@@ -1,4 +1,4 @@
-﻿using ECommerce.Shared.Exceptions; // IMPORTANTE: Usa las alarmas de Leandro
+using ECommerce.Shared.Exceptions; // IMPORTANTE: Usa las alarmas de Leandro
 using Products.API.Models;
 using System.Threading.Tasks;
 
@@ -16,14 +16,14 @@ namespace Products.API.Services
         public async Task<Product> CreateProductAsync(Product product)
         {
             // SIMULACIÓN: Verificar si ya existe en la base de datos (Para el re)
-            bool productoExiste = await VerificarSiExiste(product.Nombre, product.Categoria);
+            bool productoExiste = await VerificarSiExiste(product.Name, product.Category);
 
             if (productoExiste)
             {
                 // Dispara el error PRD-003. El "guardia" de Leandro lo atrapará
                 throw new BusinessRuleException(
                     "PRD-003",
-                    $"Ya existe un producto con ese nombre en la categoría '{product.Categoria}'."
+                    $"Ya existe un producto con ese nombre en la categoría '{product.Category}'."
                 );
             }
 
