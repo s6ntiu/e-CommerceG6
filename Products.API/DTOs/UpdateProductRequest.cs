@@ -2,7 +2,7 @@
 
 namespace Products.API.DTOs
 {
-    public class CreateProductRequest
+    public class UpdateProductRequest
     {
         [Required(ErrorMessage = "El nombre es obligatorio.")]
         [MaxLength(100)]
