@@ -1,16 +1,11 @@
-﻿using System;
-namespace Products.API.Models
+namespace Products.API.Models;
+public record Product
 {
-    public class Product
-    { public Guid Id { get; set; } 
-        public string Nombre { get; set; } = string.Empty; 
-        public string? Descripcion { get; set; }
-        public decimal Precio { get; set; } 
-        public int Stock { get; set; } 
-        public string Categoria { get; set; } = string.Empty; 
-        public DateTime FechaCreacion { get; set; } 
-    }
+public long Id { get; init; }
+public string Name { get; init; } = string.Empty;
+public string? Description { get; init; }
+public double Price { get; init; }
+public long Stock { get; init; }
+public string CreatedAt { get; init; } = string.Empty;
+public string? UpdatedAt { get; init; }
 }
-
-    
-
