@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc;
 using Products.API.DTOs;
 using Products.API.Models;
 using Products.API.Services;
@@ -25,13 +25,12 @@ namespace Products.API.Controllers
             // 1. Mapeo del DTO al Modelo
             var product = new Product
             {
-                Id = Guid.NewGuid(),
-                Nombre = request.Nombre,
-                Descripcion = request.Descripcion,
-                Precio = request.Precio,
+                Name = request.Name,
+                Description = request.Description,
+                Price = (double)request.Price,
                 Stock = request.Stock,
-                Categoria = request.Categoria,
-                FechaCreacion = DateTime.UtcNow
+                Category = request.Category,
+                CreatedAt = DateTime.UtcNow.ToString("O")
             };
 
             // 2. Ejecutar lógica de negocio (Se descomentó y se cerró el paréntesis correctamente)
