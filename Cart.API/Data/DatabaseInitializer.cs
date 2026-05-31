@@ -1,25 +1,38 @@
 ﻿using Dapper;
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 namespace Cart.API.Data;
 
 public class DatabaseInitializer
 {
+    private readonly IConfiguration _config;
+    private readonly ILogger<DatabaseInitializer> _logger;
     private readonly string _connectionString;
 
+    public DatabaseInitializer(IConfiguration config, ILogger<DatabaseInitializer> logger)
     public DatabaseInitializer(IConfiguration config)
     {
+        _config = config;
+        _logger = logger;
         _connectionString = config.GetConnectionString("DefaultConnection")
             ?? "Data Source=cart.db";
     }
 
     public void Initialize()
     {
+        var connectionString = _config.GetConnectionString("DefaultConnection") ?? "Data Source=cart.db";
+        using var connection = new SqliteConnection(connectionString);
         using var connection = new SqliteConnection(_connectionString);
         connection.Open();
 
         connection.Execute("""
             CREATE TABLE IF NOT EXISTS carts (
+                id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                -- TODO: Add your Cart columns here
+                created_at  TEXT    NOT NULL DEFAULT (datetime('now')),
+                updated_at  TEXT
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 user_id INTEGER NOT NULL,
                 status TEXT NOT NULL DEFAULT 'Active',
@@ -36,6 +49,7 @@ public class DatabaseInitializer
                 FOREIGN KEY(cart_id) REFERENCES carts(id)
             );
         """);
+        _logger.LogInformation("SQLite inicializado correctamente -> {db}", connectionString);
     }
 }
 

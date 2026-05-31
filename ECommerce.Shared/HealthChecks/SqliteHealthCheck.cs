@@ -5,7 +5,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-namespace Products.API.HealthChecks;
+namespace ECommerce.Shared.HealthChecks;
 public class SqliteHealthCheck : IHealthCheck
 {
 private readonly IConfiguration _config;
