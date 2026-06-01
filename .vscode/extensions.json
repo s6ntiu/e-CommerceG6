@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "ms-dotnettools.csharp",
+    "ms-dotnettools.csdevkit",
+    "humao.rest-client",
+    "mtxr.sqltools",
+    "mtxr.sqltools-driver-sqlite",
+    "ms-azuretools.vscode-docker",
+    "jmrog.vscode-nuget-package-manager"
+  ]
+}
