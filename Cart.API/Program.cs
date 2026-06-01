@@ -1,23 +1,15 @@
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// Registrar Repository e Initializer
+builder.Services.AddSingleton<Cart.API.Data.DatabaseInitializer>();
+builder.Services.AddScoped<Cart.API.Data.CartRepository>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Inicializar DB
+using (var scope = app.Services.CreateScope())
 {
-    app.MapOpenApi();
+    var initializer = scope.ServiceProvider.GetRequiredService<Cart.API.Data.DatabaseInitializer>();
+    initializer.Initialize();
 }
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+// Mapear los endpoints
+Cart.API.Endpoints.CartEndpoints.MapCartEndpoints(app);
