@@ -1,4 +1,4 @@
-﻿using Cart.API.Data;
+using Cart.API.Data;
 using Cart.API.DTOs;
 using ECommerce.Shared.Exceptions; // IMPORTANTE: Referencia al proyecto Shared
 
@@ -27,7 +27,7 @@ public static class CartEndpoints
             // Validar stock o cantidad (simulado por ahora hasta conectar con Products.API)
             if (request.Quantity <= 0)
             {
-                throw new UnprocessableEntityException("CRT-003", "Cantidad inválida o stock insuficiente.");
+                throw new BusinessRuleException("CRT-003", "Cantidad inválida o stock insuficiente.");
             }
 
             var cart = await repo.GetActiveCartByUserIdAsync(request.UserId);
