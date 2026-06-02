@@ -20,6 +20,9 @@ builder.Services.AddOpenApi();
 // Interceptores de excepciones globales de Leandro
 builder.Services.AddExceptionHandler<NotFoundExceptionHandler>();
 builder.Services.AddExceptionHandler<BusinessRuleExceptionHandler>();
+builder.Services.AddExceptionHandler<UnauthorizedExceptionHandler>();
+builder.Services.AddExceptionHandler<ForbiddenExceptionHandler>();
+builder.Services.AddExceptionHandler<UnprocessableEntityExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 // Registro de tu servicio de usuarios
