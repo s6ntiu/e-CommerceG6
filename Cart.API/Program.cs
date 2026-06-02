@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
+
 // Registrar Repository e Initializer
 builder.Services.AddSingleton<Cart.API.Data.DatabaseInitializer>();
 builder.Services.AddScoped<Cart.API.Data.CartRepository>();
@@ -18,8 +19,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddExceptionHandler<BusinessRuleExceptionHandler>();
 builder.Services.AddExceptionHandler<NotFoundExceptionHandler>();
 
-builder.Services.AddSingleton<DatabaseInitializer>();
-
 builder.Services.AddHealthChecks()
     .AddCheck<ApiStatusCheck>("api_status")
     .AddCheck<SqliteHealthCheck>("sqlite_status");
@@ -27,13 +26,9 @@ builder.Services.AddHealthChecks()
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
-// Inicializar DB
-using (var scope = app.Services.CreateScope())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    var initializer = scope.ServiceProvider.GetRequiredService<Cart.API.Data.DatabaseInitializer>();
-    initializer.Initialize();
 }
 
 app.UseExceptionHandler(opt => { });
@@ -51,6 +46,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
-app.Run();
 // Mapear los endpoints
 Cart.API.Endpoints.CartEndpoints.MapCartEndpoints(app);
+
+app.Run();
