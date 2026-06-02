@@ -20,4 +20,22 @@ namespace ECommerce.Shared.Exceptions
             ErrorCode = errorCode;
         }
     }
+
+    public class UnauthorizedException : Exception
+    {
+        public string ErrorCode { get; }
+        public UnauthorizedException(string errorCode, string message) : base(message) { ErrorCode = errorCode; }
+    }
+
+    public class ForbiddenException : Exception
+    {
+        public string ErrorCode { get; }
+        public ForbiddenException(string errorCode, string message) : base(message) { ErrorCode = errorCode; }
+    }
+
+    public class UnprocessableEntityException : Exception
+    {
+        public string ErrorCode { get; }
+        public UnprocessableEntityException(string errorCode, string message) : base(message) { ErrorCode = errorCode; }
+    }
 }
