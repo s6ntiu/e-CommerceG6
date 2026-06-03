@@ -1,3 +1,4 @@
+using Serilog;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -6,7 +7,14 @@ using Products.API.Extensions;
 using ECommerce.Shared.Middleware;
 using ECommerce.Shared.HealthChecks;
 using ECommerce.Shared.ExceptionHandlers;
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -21,6 +29,7 @@ builder.Services.AddHealthChecks().AddCheck<ApiStatusCheck>("api_status").AddChe
 var app = builder.Build();
 if (app.Environment.IsDevelopment()) { app.UseSwagger(); app.UseSwaggerUI(); }
 app.UseExceptionHandler(opt => { });
+app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<AuditMiddleware>();
 using (var scope = app.Services.CreateScope()) { var dbInit = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>(); dbInit.Initialize(); }
 app.MapProductEndpoints();

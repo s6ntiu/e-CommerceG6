@@ -1,3 +1,4 @@
+using Serilog;
 using ECommerce.Shared.Middleware;
 using ECommerce.Shared.HealthChecks;
 using ECommerce.Shared.ExceptionHandlers;
@@ -6,7 +7,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog();
 
 // --- REGISTRO DE SERVICIOS ---
 builder.Services.AddControllers();
@@ -45,6 +53,7 @@ if (app.Environment.IsDevelopment())
 
 // Activa el manejador global de errores
 app.UseExceptionHandler(opt => { });
+app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<AuditMiddleware>();
 
 using (var scope = app.Services.CreateScope())
