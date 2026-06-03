@@ -1,0 +1,129 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "User.API",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-user",
+            "program": "${workspaceFolder}/User.API/bin/Debug/net9.0/User.API.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/User.API",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://localhost:5002"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            }
+        },
+        {
+            "name": "Products.API",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-products",
+            "program": "${workspaceFolder}/Products.API/bin/Debug/net9.0/Products.API.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Products.API",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://localhost:5001"
+            }
+        },
+        {
+            "name": "Cart.API",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-cart",
+            "program": "${workspaceFolder}/Cart.API/bin/Debug/net9.0/Cart.API.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Cart.API",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://localhost:5003"
+            }
+        },
+        {
+            "name": "Order.API",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-order",
+            "program": "${workspaceFolder}/Order.API/bin/Debug/net9.0/Order.API.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Order.API",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://localhost:5005"
+            }
+        },
+        {
+            "name": "Notifications.API",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-notifications",
+            "program": "${workspaceFolder}/Notifications.API/bin/Debug/net9.0/Notifications.API.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Notifications.API",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://localhost:5004"
+            }
+        },
+        {
+            "name": "ECommerce.Gateway",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-gateway",
+            "program": "${workspaceFolder}/ECommerce.Gateway/bin/Debug/net10.0/ECommerce.Gateway.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/ECommerce.Gateway",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "ASPNETCORE_URLS": "http://localhost:5000"
+            }
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Start ECommerce System",
+            "configurations": [
+                "Products.API",
+                "User.API",
+                "Cart.API",
+                "Order.API",
+                "Notifications.API",
+                "ECommerce.Gateway"
+            ]
+        }
+    ]
+}
