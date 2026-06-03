@@ -11,6 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Registrar Repository e Initializer
 builder.Services.AddSingleton<Cart.API.Data.DatabaseInitializer>();
 builder.Services.AddScoped<Cart.API.Data.CartRepository>();
+builder.Services.AddHttpClient("ProductsAPI", client => {
+    client.BaseAddress = new Uri("http://localhost:5001/");
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

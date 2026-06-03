@@ -2,6 +2,8 @@ using Cart.API.Data;
 using Cart.API.DTOs;
 using ECommerce.Shared.Exceptions; // IMPORTANTE: Referencia al proyecto Shared
 
+using System.Net.Http.Json;
+
 namespace Cart.API.Endpoints;
 
 public static class CartEndpoints
@@ -22,13 +24,23 @@ public static class CartEndpoints
         });
 
         // Agregar item al carrito
-        group.MapPost("/items", async (AddToCartRequest request, CartRepository repo) =>
+        group.MapPost("/items", async (AddToCartRequest request, CartRepository repo, IHttpClientFactory httpClientFactory) =>
         {
-            // Validar stock o cantidad (simulado por ahora hasta conectar con Products.API)
             if (request.Quantity <= 0)
-            {
-                throw new BusinessRuleException("CRT-003", "Cantidad inválida o stock insuficiente.");
-            }
+                throw new BusinessRuleException("CRT-004", "Cantidad inválida.");
+
+            var client = httpClientFactory.CreateClient("ProductsAPI");
+            var response = await client.GetAsync($"/api/products/{request.ProductId}");
+            
+            if (!response.IsSuccessStatusCode)
+                throw new NotFoundException("CRT-002", "Producto no encontrado.");
+
+            var product = await response.Content.ReadFromJsonAsync<ProductDTO>();
+            if (product == null)
+                throw new NotFoundException("CRT-002", "Producto no encontrado.");
+
+            if (product.Stock < request.Quantity)
+                throw new BusinessRuleException("CRT-003", $"Stock insuficiente. Disponible: {product.Stock}, solicitado: {request.Quantity}.");
 
             var cart = await repo.GetActiveCartByUserIdAsync(request.UserId);
 
@@ -47,7 +59,7 @@ public static class CartEndpoints
                 cartId = cart.Id;
             }
 
-            await repo.AddOrUpdateItemAsync(cartId, request.ProductId, request.Quantity, request.UnitPrice);
+            await repo.AddOrUpdateItemAsync(cartId, request.ProductId, request.Quantity, product.Precio);
 
             return Results.Ok(new { Message = "Producto agregado exitosamente al carrito." });
         });

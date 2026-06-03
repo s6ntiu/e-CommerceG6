@@ -19,6 +19,12 @@ builder.Services.AddExceptionHandler<ForbiddenExceptionHandler>();
 builder.Services.AddExceptionHandler<UnprocessableEntityExceptionHandler>();
 
 builder.Services.AddSingleton<DatabaseInitializer>();
+builder.Services.AddScoped<OrderRepository>();
+
+builder.Services.AddHttpClient("UsersAPI", c => c.BaseAddress = new Uri("http://localhost:5002/"));
+builder.Services.AddHttpClient("ProductsAPI", c => c.BaseAddress = new Uri("http://localhost:5001/"));
+builder.Services.AddHttpClient("CartAPI", c => c.BaseAddress = new Uri("http://localhost:5003/"));
+builder.Services.AddHttpClient("NotificationsAPI", c => c.BaseAddress = new Uri("http://localhost:5004/"));
 
 builder.Services.AddHealthChecks()
     .AddCheck<ApiStatusCheck>("api_status")

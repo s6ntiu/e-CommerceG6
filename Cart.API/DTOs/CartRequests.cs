@@ -1,6 +1,6 @@
-﻿namespace Cart.API.DTOs;
+namespace Cart.API.DTOs;
 
-public record AddToCartRequest(int UserId, int ProductId, int Quantity, decimal UnitPrice);
+public record AddToCartRequest(int UserId, int ProductId, int Quantity);
 
 public record UpdateCartItemRequest(int Quantity);
 

@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using Order.API.Data;
 using Order.API.Models;
 using ECommerce.Shared.Exceptions;
-
+using System.Net.Http;
+using System.Net.Http.Json;
+using Order.API.DTOs;
 namespace Order.API.Controllers
 {
     [ApiController]
@@ -13,10 +15,12 @@ namespace Order.API.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly OrderRepository _repo;
+        private readonly IHttpClientFactory _httpClientFactory;
 
-        public OrdersController(OrderRepository repo)
+        public OrdersController(OrderRepository repo, IHttpClientFactory httpClientFactory)
         {
             _repo = repo;
+            _httpClientFactory = httpClientFactory;
         }
 
         [HttpGet("{id}")]
@@ -33,22 +37,41 @@ namespace Order.API.Controllers
             if (request.Items == null || !request.Items.Any())
                 throw new BusinessRuleException("ORD-002", "Los datos de la orden son inválidos.");
 
-            // TODO: Integración HTTP con Users API (ORD-003) y Products API (ORD-004, ORD-005)
-            // throw new NotFoundException("ORD-003", "Usuario no encontrado al crear la orden.");
-            // throw new UnprocessableEntityException("ORD-005", "Stock insuficiente.");
+            var usersClient = _httpClientFactory.CreateClient("UsersAPI");
+            var userResponse = await usersClient.GetAsync($"/api/users/{request.UsuarioId}");
+            if (!userResponse.IsSuccessStatusCode)
+                throw new NotFoundException("ORD-003", "Usuario no encontrado al crear la orden.");
 
-            // Simulación de armado de la orden (Asumimos Precio = 1500 provisorio)
+            var productsClient = _httpClientFactory.CreateClient("ProductsAPI");
+            var orderItems = new System.Collections.Generic.List<OrderItemDTO>();
+
+            foreach (var item in request.Items)
+            {
+                var productResponse = await productsClient.GetAsync($"/api/products/{item.ProductoId}");
+                if (!productResponse.IsSuccessStatusCode)
+                    throw new NotFoundException("ORD-004", $"Producto {item.ProductoId} no encontrado al crear la orden.");
+
+                var product = await productResponse.Content.ReadFromJsonAsync<ProductDTO>();
+                if (product == null)
+                    throw new NotFoundException("ORD-004", $"Producto {item.ProductoId} no encontrado al crear la orden.");
+
+                if (product.Stock < item.Cantidad)
+                    throw new UnprocessableEntityException("ORD-005", $"Stock insuficiente para '{product.Nombre}'. Disponible: {product.Stock}, solicitado: {item.Cantidad}.");
+
+                orderItems.Add(new OrderItemDTO {
+                    ProductoId = item.ProductoId,
+                    Cantidad = item.Cantidad,
+                    PrecioUnitario = product.Precio
+                });
+            }
+
             var newOrder = new OrderDTO
             {
                 Id = Guid.NewGuid().ToString(),
                 UsuarioId = request.UsuarioId,
                 Estado = "Pendiente",
                 FechaCreacion = DateTime.UtcNow,
-                Items = request.Items.Select(i => new OrderItemDTO { 
-                    ProductoId = i.ProductoId, 
-                    Cantidad = i.Cantidad, 
-                    PrecioUnitario = 1500m // Esto debería venir de la API de Products
-                }).ToList()
+                Items = orderItems
             };
             newOrder.Total = newOrder.Items.Sum(i => i.Cantidad * i.PrecioUnitario);
 
@@ -69,6 +92,21 @@ namespace Order.API.Controllers
 
             await _repo.UpdateStatusAsync(id, request.Estado);
 
+            if (request.Estado == "Confirmada")
+            {
+                // Vaciar el carrito
+                var cartClient = _httpClientFactory.CreateClient("CartAPI");
+                await cartClient.DeleteAsync($"/api/carts/{order.UsuarioId}");
+
+                // Enviar notificación
+                var notifClient = _httpClientFactory.CreateClient("NotificationsAPI");
+                await notifClient.PostAsJsonAsync("/api/notifications/send", new 
+                {
+                    UsuarioId = order.UsuarioId,
+                    Mensaje = $"Su orden #{id} fue confirmada.",
+                    Tipo = "Email"
+                });
+            }
             return Ok(new { id = id, estado = request.Estado, fechaActualizacion = DateTime.UtcNow });
         }
     }

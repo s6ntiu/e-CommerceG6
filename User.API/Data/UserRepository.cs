@@ -1,4 +1,4 @@
-﻿using Dapper;
+using Dapper;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
@@ -24,6 +24,14 @@ namespace User.API.Data
             return await conn.QuerySingleOrDefaultAsync<Usuario>(
                 "SELECT id as Id, nombre as Nombre, apellido as Apellido, email as Email, password_hash as PasswordHash, fecha_registro as FechaRegistro, activo as Activo, intentos_fallidos as IntentosFallidos FROM users WHERE email = @Email",
                 new { Email = email });
+        }
+
+        public async Task<Usuario?> GetByIdAsync(string id)
+        {
+            using var conn = CreateConnection();
+            return await conn.QuerySingleOrDefaultAsync<Usuario>(
+                "SELECT id as Id, nombre as Nombre, apellido as Apellido, email as Email, password_hash as PasswordHash, fecha_registro as FechaRegistro, activo as Activo, intentos_fallidos as IntentosFallidos FROM users WHERE id = @Id",
+                new { Id = id });
         }
 
         public async Task<bool> CreateAsync(Usuario user)

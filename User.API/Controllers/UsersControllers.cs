@@ -104,5 +104,18 @@ namespace User.API.Controllers
                 email = user.Email
             });
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id)
+        {
+            var user = await _repo.GetByIdAsync(id);
+            if (user == null) throw new NotFoundException("USR-006", "Usuario no encontrado.");
+            return Ok(new
+            {
+                id = user.Id,
+                nombre = user.Nombre,
+                apellido = user.Apellido,
+                email = user.Email
+            });
+        }
     }
 }
