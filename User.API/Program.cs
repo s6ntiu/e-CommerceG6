@@ -2,7 +2,6 @@ using ECommerce.Shared.Middleware;
 using ECommerce.Shared.HealthChecks;
 using ECommerce.Shared.ExceptionHandlers;
 using User.API.Data;
-using User.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,7 +25,7 @@ builder.Services.AddExceptionHandler<UnprocessableEntityExceptionHandler>();
 builder.Services.AddProblemDetails();
 
 // Registro de tu servicio de usuarios
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<User.API.Data.UserRepository>();
 builder.Services.AddSingleton<DatabaseInitializer>();
 
 builder.Services.AddHealthChecks()

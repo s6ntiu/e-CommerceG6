@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using User.API.DTOs;
-using User.API.Services;
+using User.API.Data;
+using User.API.Models;
+using ECommerce.Shared.Exceptions;
 
 namespace User.API.Controllers
 {
@@ -9,40 +10,98 @@ namespace User.API.Controllers
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly UserRepository _repo;
 
-        public UsersController(IUserService userService)
+        public UsersController(UserRepository repo)
         {
-            _userService = userService;
+            _repo = repo;
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
-            var newUser = await _userService.RegisterAsync(request);
-
-            return CreatedAtAction(nameof(Register), new { id = newUser.Id }, new
+            // 1. Validar si el email ya existe en la base de datos de SQLite
+            var existingUser = await _repo.GetByEmailAsync(request.Email);
+            if (existingUser != null)
             {
-                newUser.Id,
-                newUser.Nombre,
-                newUser.Apellido,
-                newUser.Email,
-                newUser.FechaRegistration,
-                newUser.Activo
+                throw new BusinessRuleException("USR-001", $"El email '{request.Email}' ya está registrado.");
+            }
+
+            // 2. Crear la entidad Usuario con la contraseña hasheada mediante BCrypt
+            var newUser = new Usuario
+            {
+                Nombre = request.Nombre,
+                Apellido = request.Apellido,
+                Email = request.Email,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
+            };
+
+            // 3. Persistir en la base de datos
+            await _repo.CreateAsync(newUser);
+
+            // 4. Devolver respuesta 201 Created con los datos públicos del usuario
+            return Created("", new
+            {
+                id = newUser.Id,
+                nombre = newUser.Nombre,
+                apellido = newUser.Apellido,
+                email = newUser.Email,
+                fechaRegistro = newUser.FechaRegistro,
+                activo = newUser.Activo
             });
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
-            var user = await _userService.LoginAsync(request);
+            // 1. Buscar al usuario por email
+            var user = await _repo.GetByEmailAsync(request.Email);
+            if (user == null)
+            {
+                throw new UnauthorizedException("USR-003", "Credenciales incorrectas.");
+            }
 
+            // 2. Verificar si la cuenta está bloqueada o suspendida
+            if (!user.Activo)
+            {
+                if (user.IntentosFallidos >= 3)
+                {
+                    throw new ForbiddenException("USR-004", "Su cuenta fue bloqueada por superar el máximo de intentos fallidos. Contacte a soporte.");
+                }
+                else
+                {
+                    throw new ForbiddenException("USR-005", "Su cuenta fue suspendida por razones de seguridad. Contacte a soporte.");
+                }
+            }
+
+            // 3. Verificar contraseña con BCrypt
+            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+            {
+                user.IntentosFallidos++;
+                if (user.IntentosFallidos >= 3)
+                {
+                    user.Activo = false;
+                }
+
+                // Actualizar el contador de intentos y el estado en la base de datos
+                await _repo.UpdateIntentosAsync(user.Id, user.IntentosFallidos, user.Activo);
+
+                throw new UnauthorizedException("USR-003", "Credenciales incorrectas.");
+            }
+
+            // 4. Si el login es exitoso, resetear los intentos fallidos si tenía alguno
+            if (user.IntentosFallidos > 0)
+            {
+                await _repo.UpdateIntentosAsync(user.Id, 0, true);
+            }
+
+            // 5. Devolver datos del usuario autenticado
             return Ok(new
             {
-                user.Id,
-                user.Nombre,
-                user.Apellido,
-                user.Email
+                id = user.Id,
+                nombre = user.Nombre,
+                apellido = user.Apellido,
+                email = user.Email
             });
         }
     }

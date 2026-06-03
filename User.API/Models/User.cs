@@ -1,13 +1,41 @@
-namespace User.API.Models;
+using System;
+using System.ComponentModel.DataAnnotations;
 
-public class User
+namespace User.API.Models
 {
-    public Guid Id { get; set; }
-    public string Nombre { get; set; } = string.Empty;
-    public string Apellido { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string PasswordHash { get; set; } = string.Empty; // Nunca se expone en los HTTP responses
-    public DateTime FechaRegistration { get; set; }
-    public bool Activo { get; set; }
-    public int IntentosFallidos { get; set; }
+    public class Usuario
+    {
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public string Nombre { get; set; } = string.Empty;
+        public string Apellido { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string PasswordHash { get; set; } = string.Empty;
+        public DateTime FechaRegistro { get; set; } = DateTime.UtcNow;
+        public bool Activo { get; set; } = true;
+        public int IntentosFallidos { get; set; } = 0;
+    }
+
+    public class RegisterRequest
+    {
+        [Required]
+        public string Nombre { get; set; } = string.Empty;
+
+        [Required]
+        public string Apellido { get; set; } = string.Empty;
+
+        [Required, EmailAddress]
+        public string Email { get; set; } = string.Empty;
+
+        [Required]
+        public string Password { get; set; } = string.Empty;
+    }
+
+    public class LoginRequest
+    {
+        [Required, EmailAddress]
+        public string Email { get; set; } = string.Empty;
+
+        [Required]
+        public string Password { get; set; } = string.Empty;
+    }
 }
