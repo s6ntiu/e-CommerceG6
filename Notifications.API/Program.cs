@@ -19,6 +19,7 @@ builder.Services.AddExceptionHandler<ForbiddenExceptionHandler>();
 builder.Services.AddExceptionHandler<UnprocessableEntityExceptionHandler>();
 
 builder.Services.AddSingleton<DatabaseInitializer>();
+builder.Services.AddScoped<NotificationRepository>();
 
 builder.Services.AddHealthChecks()
     .AddCheck<ApiStatusCheck>("api_status")

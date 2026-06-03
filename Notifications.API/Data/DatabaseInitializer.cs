@@ -23,10 +23,12 @@ public class DatabaseInitializer
         connection.Open();
         connection.Execute("""
             CREATE TABLE IF NOT EXISTS notifications (
-                id          INTEGER PRIMARY KEY AUTOINCREMENT,
-                -- TODO: Add your Notification columns here
-                created_at  TEXT    NOT NULL DEFAULT (datetime('now')),
-                updated_at  TEXT
+                id TEXT PRIMARY KEY,
+                usuario_id TEXT NOT NULL,
+                mensaje TEXT NOT NULL,
+                tipo TEXT NOT NULL,
+                estado TEXT NOT NULL,
+                fecha_envio TEXT NOT NULL
             );
         """);
         _logger.LogInformation("SQLite inicializado correctamente -> {db}", connectionString);
