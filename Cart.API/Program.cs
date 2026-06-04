@@ -24,6 +24,19 @@ builder.Services.AddHealthChecks()
     .AddCheck<ApiStatusCheck>("api_status")
     .AddCheck<SqliteHealthCheck>("sqlite_status");
 
+// Registro de clientes HTTP
+builder.Services.AddHttpClient("ProductsAPI", client =>
+{
+    // Cambia el puerto según corresponda en tu entorno
+    client.BaseAddress = new Uri("http://localhost:5001/");
+});
+
+builder.Services.AddHttpClient("UsersAPI", client =>
+{
+    // Cambia el puerto según corresponda en tu entorno
+    client.BaseAddress = new Uri("http://localhost:5002/");
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
