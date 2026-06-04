@@ -23,10 +23,18 @@ public class DatabaseInitializer
         connection.Open();
         connection.Execute("""
             CREATE TABLE IF NOT EXISTS orders (
-                id          INTEGER PRIMARY KEY AUTOINCREMENT,
-                -- TODO: Add your Order columns here
-                created_at  TEXT    NOT NULL DEFAULT (datetime('now')),
-                updated_at  TEXT
+                id TEXT PRIMARY KEY,
+                usuario_id TEXT NOT NULL,
+                total REAL NOT NULL,
+                estado TEXT NOT NULL,
+                fecha_creacion TEXT NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS order_items (
+                order_id TEXT NOT NULL,
+                producto_id TEXT NOT NULL,
+                cantidad INTEGER NOT NULL,
+                precio_unitario REAL NOT NULL,
+                FOREIGN KEY(order_id) REFERENCES orders(id)
             );
         """);
         _logger.LogInformation("SQLite inicializado correctamente -> {db}", connectionString);
