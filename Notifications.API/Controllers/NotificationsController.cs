@@ -5,6 +5,7 @@ using Notifications.API.Data;
 using Notifications.API.Models;
 using ECommerce.Shared.Exceptions;
 using System.Linq;
+using System.Net.Http;
 
 namespace Notifications.API.Controllers
 {
@@ -20,13 +21,16 @@ namespace Notifications.API.Controllers
         }
 
         [HttpPost("send")]
-        public async Task<IActionResult> Send([FromBody] SendNotificationRequest request)
+        public async Task<IActionResult> Send([FromBody] SendNotificationRequest request, [FromServices] IHttpClientFactory httpClientFactory)
         {
             if (string.IsNullOrWhiteSpace(request.Mensaje) || string.IsNullOrWhiteSpace(request.Tipo))
                 throw new BusinessRuleException("NTF-002", "Los datos de la notificación son inválidos.");
 
-            // TODO: Integración HTTP con Users API para validar que el usuario existe (NTF-001)
-            // throw new NotFoundException("NTF-001", "El usuario destinatario no fue encontrado.");
+            // Validar UsuarioId con Users.API (NTF-001)
+            var usersClient = httpClientFactory.CreateClient("UsersAPI");
+            var userRes = await usersClient.GetAsync($"/api/users/{request.UsuarioId}"); 
+            if (!userRes.IsSuccessStatusCode) 
+                throw new NotFoundException("NTF-001", "El usuario destinatario no fue encontrado.");
 
             var newNotif = new NotificationDTO
             {
