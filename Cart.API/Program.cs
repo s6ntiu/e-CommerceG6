@@ -22,6 +22,9 @@ builder.Services.AddScoped<Cart.API.Data.CartRepository>();
 builder.Services.AddHttpClient("ProductsAPI", client => {
     client.BaseAddress = new Uri("http://localhost:5001/");
 });
+builder.Services.AddHttpClient("UsersAPI", client => {
+    client.BaseAddress = new Uri("http://localhost:5002/");
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
