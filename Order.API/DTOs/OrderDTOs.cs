@@ -12,7 +12,7 @@ public class CreateOrderRequest
 
 public class OrderItemRequest
 {
-    [Required] public Guid ProductoId { get; set; }
+    [Required] public int ProductoId { get; set; }
     [Required, Range(1, int.MaxValue)] public int Cantidad { get; set; }
 }
 
