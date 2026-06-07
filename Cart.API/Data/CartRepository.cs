@@ -1,4 +1,4 @@
-﻿using Cart.API.Models;
+using Cart.API.Models;
 using Dapper;
 using Microsoft.Data.Sqlite;
 
@@ -15,7 +15,7 @@ public class CartRepository
 
     private SqliteConnection CreateConnection() => new SqliteConnection(_connectionString);
 
-    public async Task<Models.Cart?> GetActiveCartByUserIdAsync(int userId)
+    public async Task<Models.Cart?> GetActiveCartByUserIdAsync(string userId)
     {
         using var conn = CreateConnection();
         var cart = await conn.QuerySingleOrDefaultAsync<Models.Cart>(
@@ -33,7 +33,7 @@ public class CartRepository
         return cart;
     }
 
-    public async Task<int> CreateCartAsync(int userId)
+    public async Task<int> CreateCartAsync(string userId)
     {
         using var conn = CreateConnection();
         return await conn.ExecuteScalarAsync<int>(

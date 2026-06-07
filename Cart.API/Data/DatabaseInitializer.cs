@@ -28,7 +28,7 @@ public class DatabaseInitializer
         connection.Execute("""
             CREATE TABLE IF NOT EXISTS carts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id INTEGER NOT NULL,
+                user_id TEXT NOT NULL,
                 status TEXT NOT NULL DEFAULT 'Active',
                 created_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime')),
                 updated_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))

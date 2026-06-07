@@ -13,7 +13,7 @@ public static class CartEndpoints
         var group = app.MapGroup("/api/carts").WithTags("Carts");
 
         // Obtener carrito activo de un usuario
-        group.MapGet("/{userId}", async (int userId, CartRepository repo) =>
+        group.MapGet("/{userId}", async (string userId, CartRepository repo) =>
         {
             var cart = await repo.GetActiveCartByUserIdAsync(userId);
             if (cart == null)
@@ -65,7 +65,7 @@ public static class CartEndpoints
         });
 
         // Eliminar item del carrito
-        group.MapDelete("/{userId}/items/{productId}", async (int userId, int productId, CartRepository repo) =>
+        group.MapDelete("/{userId}/items/{productId}", async (string userId, int productId, CartRepository repo) =>
         {
             var cart = await repo.GetActiveCartByUserIdAsync(userId);
             if (cart == null)
