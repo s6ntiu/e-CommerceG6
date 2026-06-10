@@ -44,13 +44,21 @@ builder.Services.AddHttpClient("ProductsAPI", client =>
     client.BaseAddress = new Uri("http://localhost:5001/");
 });
 
-builder.Services.AddHttpClient("UsersAPI", client =>
-{
-    // Cambia el puerto según corresponda en tu entorno
-    client.BaseAddress = new Uri("http://localhost:5002/");
-});
+
+
+// Registrar Repositorio e Inicializador de Base de Datos
+builder.Services.AddScoped<Notifications.API.Data.NotificationRepository>();
+builder.Services.AddScoped<Notifications.API.Data.DatabaseInitializer>();
+
 
 var app = builder.Build();
+
+// Inicializar la base de datos SQLite de notificaciones
+using (var scope = app.Services.CreateScope())
+{
+    var initializer = scope.ServiceProvider.GetRequiredService<Notifications.API.Data.DatabaseInitializer>();
+    initializer.Initialize();
+}
 
 if (app.Environment.IsDevelopment())
 {

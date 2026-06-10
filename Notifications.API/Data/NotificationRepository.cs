@@ -4,31 +4,44 @@ using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Notifications.API.Models;
-using System.Linq;
 
 namespace Notifications.API.Data
 {
     public class NotificationRepository
     {
         private readonly IConfiguration _config;
-        public NotificationRepository(IConfiguration config) => _config = config;
-        private SqliteConnection CreateConnection() => new(_config.GetConnectionString("DefaultConnection") ?? "Data Source=notifications.db");
 
-        public async Task<List<NotificationDTO>> GetByUserIdAsync(string userId)
+        public NotificationRepository(IConfiguration config)
         {
-            using var conn = CreateConnection();
-            var result = await conn.QueryAsync<NotificationDTO>(
-                "SELECT id, usuario_id as UsuarioId, mensaje, tipo, estado, fecha_envio as FechaEnvio FROM notifications WHERE usuario_id = @UserId", 
-                new { UserId = userId });
-            return result.ToList();
+            _config = config;
         }
 
-        public async Task CreateAsync(NotificationDTO notif)
+        private SqliteConnection CreateConnection() =>
+            new(_config.GetConnectionString("DefaultConnection") ?? "Data Source=notifications.db");
+
+        public async Task<IEnumerable<Notification>> GetByUserIdAsync(string userId) // <-- string aquí
         {
             using var conn = CreateConnection();
-            await conn.ExecuteAsync(
-                "INSERT INTO notifications (id, usuario_id, mensaje, tipo, estado, fecha_envio) VALUES (@Id, @UsuarioId, @Mensaje, @Tipo, @Estado, @FechaEnvio)", 
-                new { notif.Id, notif.UsuarioId, notif.Mensaje, notif.Tipo, notif.Estado, FechaEnvio = notif.FechaEnvio.ToString("O") });
+            return await conn.QueryAsync<Notification>(
+                "SELECT id as Id, usuario_id as UsuarioId, mensaje as Mensaje, tipo as Tipo, estado as Estado, fecha_creacion as FechaCreacion FROM notifications WHERE usuario_id = @UsuarioId",
+                new { UsuarioId = userId });
+        }
+
+        public async Task<bool> CreateAsync(Notification notification)
+        {
+            using var conn = CreateConnection();
+            var result = await conn.ExecuteAsync(
+                "INSERT INTO notifications (id, usuario_id, mensaje, tipo, estado, fecha_creacion) VALUES (@Id, @UsuarioId, @Mensaje, @Tipo, @Estado, @FechaCreacion)",
+                new
+                {
+                    Id = notification.Id,
+                    UsuarioId = notification.UsuarioId,
+                    Mensaje = notification.Mensaje,
+                    Tipo = notification.Tipo,
+                    Estado = notification.Estado,
+                    FechaCreacion = notification.FechaCreacion.ToString("o")
+                });
+            return result > 0;
         }
     }
 }
