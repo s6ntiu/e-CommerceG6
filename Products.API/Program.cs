@@ -28,7 +28,8 @@ builder.Services.AddSingleton<DatabaseInitializer>();
 builder.Services.AddHealthChecks().AddCheck<ApiStatusCheck>("api_status").AddCheck<SqliteHealthCheck>("sqlite_status");
 var app = builder.Build();
 if (app.Environment.IsDevelopment()) { app.UseSwagger(); app.UseSwaggerUI(); }
-app.UseExceptionHandler(opt => { });
+void ConfigureExceptionHandler(IApplicationBuilder opt) { }
+app.UseExceptionHandler(ConfigureExceptionHandler);
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<AuditMiddleware>();
 using (var scope = app.Services.CreateScope()) { var dbInit = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>(); dbInit.Initialize(); }
