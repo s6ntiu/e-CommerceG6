@@ -30,7 +30,7 @@ builder.Services.AddSingleton<DatabaseInitializer>();
 builder.Services.AddScoped<NotificationRepository>();
 
 builder.Services.AddHttpClient("UsersAPI", client => {
-    client.BaseAddress = new Uri("http://localhost:5002/");
+    client.BaseAddress = new Uri("http://localhost:5000/");
 });
 
 builder.Services.AddHealthChecks()
@@ -40,25 +40,13 @@ builder.Services.AddHealthChecks()
 // Registro de clientes HTTP
 builder.Services.AddHttpClient("ProductsAPI", client =>
 {
-    // Cambia el puerto según corresponda en tu entorno
-    client.BaseAddress = new Uri("http://localhost:5001/");
+    // Cambia el puerto segÃºn corresponda en tu entorno
+    client.BaseAddress = new Uri("http://localhost:5000/");
 });
 
 
 
-// Registrar Repositorio e Inicializador de Base de Datos
-builder.Services.AddScoped<Notifications.API.Data.NotificationRepository>();
-builder.Services.AddScoped<Notifications.API.Data.DatabaseInitializer>();
-
-
 var app = builder.Build();
-
-// Inicializar la base de datos SQLite de notificaciones
-using (var scope = app.Services.CreateScope())
-{
-    var initializer = scope.ServiceProvider.GetRequiredService<Notifications.API.Data.DatabaseInitializer>();
-    initializer.Initialize();
-}
 
 if (app.Environment.IsDevelopment())
 {

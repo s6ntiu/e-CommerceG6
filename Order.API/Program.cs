@@ -29,25 +29,20 @@ builder.Services.AddExceptionHandler<UnprocessableEntityExceptionHandler>();
 builder.Services.AddSingleton<DatabaseInitializer>();
 builder.Services.AddScoped<OrderRepository>();
 
-builder.Services.AddHttpClient("UsersAPI", c => c.BaseAddress = new Uri("http://localhost:5002/"));
-builder.Services.AddHttpClient("ProductsAPI", c => c.BaseAddress = new Uri("http://localhost:5001/"));
-builder.Services.AddHttpClient("CartAPI", c => c.BaseAddress = new Uri("http://localhost:5003/"));
-builder.Services.AddHttpClient("NotificationsAPI", c => c.BaseAddress = new Uri("http://localhost:5004/"));
+builder.Services.AddHttpClient("UsersAPI", c => c.BaseAddress = new Uri("http://localhost:5000/"));
+builder.Services.AddHttpClient("ProductsAPI", c => c.BaseAddress = new Uri("http://localhost:5000/"));
+builder.Services.AddHttpClient("CartAPI", c => c.BaseAddress = new Uri("http://localhost:5000/"));
+builder.Services.AddHttpClient("NotificationsAPI", c => c.BaseAddress = new Uri("http://localhost:5000/"));
 
 builder.Services.AddHealthChecks()
     .AddCheck<ApiStatusCheck>("api_status")
     .AddCheck<SqliteHealthCheck>("sqlite_status");
 
-// Registro de clientes HTTP
-builder.Services.AddHttpClient("ProductsAPI", client =>
-{
-    // Cambia el puerto según corresponda en tu entorno
-    client.BaseAddress = new Uri("https://localhost:7000/");
-});
+
 
 builder.Services.AddHttpClient("UsersAPI", client =>
 {
-    // Cambia el puerto según corresponda en tu entorno
+    // Cambia el puerto segÃºn corresponda en tu entorno
     client.BaseAddress = new Uri("https://localhost:7000/");
 });
 
