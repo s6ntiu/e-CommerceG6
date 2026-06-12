@@ -30,12 +30,9 @@ namespace ECommerce.Shared.Middleware
                 context.Request.Headers.Append(CorrelationIdHeaderName, correlationId);
             }
 
-            context.Response.OnStarting(() =>
+            context.Response.OnStarting(delegate ()
             {
-                if (!context.Response.Headers.ContainsKey(CorrelationIdHeaderName))
-                {
-                    context.Response.Headers.Append(CorrelationIdHeaderName, correlationId);
-                }
+                context.Response.Headers["X-Correlation-ID"] = correlationId;
                 return Task.CompletedTask;
             });
 

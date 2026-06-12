@@ -9,8 +9,11 @@ namespace ECommerce.Shared.HealthChecks;
 public class SqliteHealthCheck : IHealthCheck
 {
 private readonly IConfiguration _config;
-public SqliteHealthCheck(IConfiguration config) => _config = config;
-public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
+    public SqliteHealthCheck(IConfiguration config)
+    {
+        _config = config;
+    }
+    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
 {
 try {
 var connectionString = _config.GetConnectionString("DefaultConnection") ?? "Data Source=products.db";
