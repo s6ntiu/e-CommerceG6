@@ -20,10 +20,10 @@ builder.Host.UseSerilog();
 builder.Services.AddSingleton<Cart.API.Data.DatabaseInitializer>();
 builder.Services.AddScoped<Cart.API.Data.CartRepository>();
 builder.Services.AddHttpClient("ProductsAPI", client => {
-    client.BaseAddress = new Uri("http://localhost:5001/");
+    client.BaseAddress = new Uri("http://localhost:5000/");
 });
 builder.Services.AddHttpClient("UsersAPI", client => {
-    client.BaseAddress = new Uri("http://localhost:5002/");
+    client.BaseAddress = new Uri("http://localhost:5000/");
 });
 
 builder.Services.AddControllers();
@@ -40,16 +40,11 @@ builder.Services.AddHealthChecks()
     .AddCheck<ApiStatusCheck>("api_status")
     .AddCheck<SqliteHealthCheck>("sqlite_status");
 
-// Registro de clientes HTTP
-builder.Services.AddHttpClient("ProductsAPI", client =>
-{
-    // Cambia el puerto según corresponda en tu entorno
-    client.BaseAddress = new Uri("https://localhost:7000/");
-});
+
 
 builder.Services.AddHttpClient("UsersAPI", client =>
 {
-    // Cambia el puerto según corresponda en tu entorno
+    // Cambia el puerto segÃºn corresponda en tu entorno
     client.BaseAddress = new Uri("https://localhost:7000/");
 });
 
