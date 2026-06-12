@@ -21,10 +21,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Agrega el generador nativo de OpenAPI de .NET 9
+// generador nativo de OpenAPI de .NET 9
 builder.Services.AddOpenApi();
 
-// Interceptores de excepciones globales de Leandro
+// excepciones globales de lean
 builder.Services.AddExceptionHandler<NotFoundExceptionHandler>();
 builder.Services.AddExceptionHandler<BusinessRuleExceptionHandler>();
 builder.Services.AddExceptionHandler<UnauthorizedExceptionHandler>();
@@ -42,16 +42,15 @@ builder.Services.AddHealthChecks()
 
 var app = builder.Build();
 
-// --- CONFIGURACIÓN DEL PIPELINE (MIDDLEWARES) ---
+// --- CONFIGURACIÓN DEL PIPELINE ---
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    // Mapea el endpoint nativo de OpenAPI (localhost:5028/openapi/v1.json)
     app.MapOpenApi();
 }
 
-// Activa el manejador global de errores
+// usar exception handler global 
 app.UseExceptionHandler(opt => { });
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<AuditMiddleware>();
