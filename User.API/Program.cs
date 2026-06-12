@@ -51,7 +51,8 @@ if (app.Environment.IsDevelopment())
 }
 
 // usar exception handler global 
-app.UseExceptionHandler(opt => { });
+void ConfigureExceptionHandler(IApplicationBuilder opt) { }
+app.UseExceptionHandler(ConfigureExceptionHandler);
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<AuditMiddleware>();
 

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Order.API.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+
 using System.Threading.Tasks;
 
 namespace Order.API.Data;
@@ -12,8 +12,12 @@ namespace Order.API.Data;
 public class OrderRepository
 {
     private readonly IConfiguration _config;
-    public OrderRepository(IConfiguration config) => _config = config;
-    private SqliteConnection CreateConnection() => new(_config.GetConnectionString("DefaultConnection") ?? "Data Source=order.db");
+    public OrderRepository(IConfiguration config) {
+        _config = config;
+    }
+    private SqliteConnection CreateConnection() {
+        return new SqliteConnection(_config.GetConnectionString("DefaultConnection") ?? "Data Source=order.db");
+    }
 
     public async Task<IEnumerable<Models.Order>> GetAllAsync(Guid? usuarioId)
     {

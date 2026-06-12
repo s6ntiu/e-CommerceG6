@@ -19,12 +19,15 @@ builder.Host.UseSerilog();
 // Registrar Repository e Initializer
 builder.Services.AddSingleton<Cart.API.Data.DatabaseInitializer>();
 builder.Services.AddScoped<Cart.API.Data.CartRepository>();
-builder.Services.AddHttpClient("ProductsAPI", client => {
+void ConfigureProductsClient(HttpClient client) {
     client.BaseAddress = new Uri("http://localhost:5000/");
-});
-builder.Services.AddHttpClient("UsersAPI", client => {
+}
+builder.Services.AddHttpClient("ProductsAPI", ConfigureProductsClient);
+
+void ConfigureUsersClient(HttpClient client) {
     client.BaseAddress = new Uri("http://localhost:5000/");
-});
+}
+builder.Services.AddHttpClient("UsersAPI", ConfigureUsersClient);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -56,7 +59,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseExceptionHandler(opt => { });
+void ConfigureExceptionHandler(IApplicationBuilder opt) { }
+app.UseExceptionHandler(ConfigureExceptionHandler);
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<AuditMiddleware>();
 

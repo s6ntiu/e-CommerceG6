@@ -15,8 +15,9 @@ namespace User.API.Data
             _config = config;
         }
 
-        private SqliteConnection CreateConnection() =>
-            new(_config.GetConnectionString("DefaultConnection") ?? "Data Source=user.db");
+        private SqliteConnection CreateConnection() {
+            return new SqliteConnection(_config.GetConnectionString("DefaultConnection") ?? "Data Source=user.db");
+        }
 
         public async Task<Usuario?> GetByEmailAsync(string email)
         {

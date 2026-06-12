@@ -4,7 +4,7 @@ using Order.API.DTOs;
 using ECommerce.Shared.Exceptions;
 using System;
 using System.Threading.Tasks;
-using System.Linq;
+
 using System.Net.Http;
 using System.Text.Json;
 using System.Collections.Generic;
@@ -16,7 +16,9 @@ namespace Order.API.Controllers;
 public class OrdersController : ControllerBase
 {
     private readonly OrderRepository _repository;
-    public OrdersController(OrderRepository repository) => _repository = repository;
+    public OrdersController(OrderRepository repository) {
+        _repository = repository;
+    }
 
     [HttpGet]
     public async Task<IActionResult> GetAll([FromQuery] Guid? usuarioId)
@@ -36,7 +38,14 @@ public class OrdersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateOrderRequest request, [FromServices] IHttpClientFactory httpClientFactory)
     {
-        if (request.Items == null || !request.Items.Any()) 
+        bool hasItems = false;
+        if (request.Items != null) {
+            foreach (var item in request.Items) {
+                hasItems = true;
+                break;
+            }
+        }
+        if (!hasItems)
             throw new BusinessRuleException("ORD-002", "Los datos de la orden son inválidos.");
 
         // Validar Usuario (ORD-003) en Users.API
@@ -49,7 +58,7 @@ public class OrdersController : ControllerBase
         var newItems = new List<Models.OrderItem>();
         decimal total = 0;
 
-        foreach (var item in request.Items)
+        foreach (var item in request.Items!)
         {
             var prodRes = await productsClient.GetAsync($"/api/products/{item.ProductoId}");
             if (!prodRes.IsSuccessStatusCode) 
