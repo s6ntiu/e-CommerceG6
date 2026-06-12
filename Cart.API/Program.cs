@@ -44,13 +44,13 @@ builder.Services.AddHealthChecks()
 builder.Services.AddHttpClient("ProductsAPI", client =>
 {
     // Cambia el puerto según corresponda en tu entorno
-    client.BaseAddress = new Uri("http://localhost:5001/");
+    client.BaseAddress = new Uri("https://localhost:7000/");
 });
 
 builder.Services.AddHttpClient("UsersAPI", client =>
 {
     // Cambia el puerto según corresponda en tu entorno
-    client.BaseAddress = new Uri("http://localhost:5002/");
+    client.BaseAddress = new Uri("https://localhost:7000/");
 });
 
 var app = builder.Build();
