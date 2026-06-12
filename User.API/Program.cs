@@ -20,8 +20,6 @@ builder.Host.UseSerilog();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-// generador nativo de OpenAPI de .NET 9
 builder.Services.AddOpenApi();
 
 // excepciones globales de lean
