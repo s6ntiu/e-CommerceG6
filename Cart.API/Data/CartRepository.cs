@@ -13,7 +13,9 @@ public class CartRepository
         _connectionString = config.GetConnectionString("DefaultConnection") ?? "Data Source=cart.db";
     }
 
-    private SqliteConnection CreateConnection() => new SqliteConnection(_connectionString);
+    private SqliteConnection CreateConnection() {
+        return new SqliteConnection(_connectionString);
+    }
 
     public async Task<Models.Cart?> GetActiveCartByUserIdAsync(string userId)
     {

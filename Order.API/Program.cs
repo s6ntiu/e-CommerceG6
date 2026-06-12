@@ -29,10 +29,17 @@ builder.Services.AddExceptionHandler<UnprocessableEntityExceptionHandler>();
 builder.Services.AddSingleton<DatabaseInitializer>();
 builder.Services.AddScoped<OrderRepository>();
 
-builder.Services.AddHttpClient("UsersAPI", c => c.BaseAddress = new Uri("http://localhost:5000/"));
-builder.Services.AddHttpClient("ProductsAPI", c => c.BaseAddress = new Uri("http://localhost:5000/"));
-builder.Services.AddHttpClient("CartAPI", c => c.BaseAddress = new Uri("http://localhost:5000/"));
-builder.Services.AddHttpClient("NotificationsAPI", c => c.BaseAddress = new Uri("http://localhost:5000/"));
+void ConfigureUsersClient(HttpClient c) { c.BaseAddress = new Uri("http://localhost:5000/"); }
+builder.Services.AddHttpClient("UsersAPI", ConfigureUsersClient);
+
+void ConfigureProductsClient(HttpClient c) { c.BaseAddress = new Uri("http://localhost:5000/"); }
+builder.Services.AddHttpClient("ProductsAPI", ConfigureProductsClient);
+
+void ConfigureCartClient(HttpClient c) { c.BaseAddress = new Uri("http://localhost:5000/"); }
+builder.Services.AddHttpClient("CartAPI", ConfigureCartClient);
+
+void ConfigureNotificationsClient(HttpClient c) { c.BaseAddress = new Uri("http://localhost:5000/"); }
+builder.Services.AddHttpClient("NotificationsAPI", ConfigureNotificationsClient);
 
 builder.Services.AddHealthChecks()
     .AddCheck<ApiStatusCheck>("api_status")
@@ -47,7 +54,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseExceptionHandler(opt => { });
+void ConfigureExceptionHandler(IApplicationBuilder opt) { }
+app.UseExceptionHandler(ConfigureExceptionHandler);
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<AuditMiddleware>();
 

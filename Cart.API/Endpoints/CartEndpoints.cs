@@ -13,19 +13,18 @@ public static class CartEndpoints
         var group = app.MapGroup("/api/carts").WithTags("Carts");
 
         // Obtener carrito activo de un usuario
-        group.MapGet("/{userId}", async (string userId, CartRepository repo) =>
-        {
+        async Task<IResult> GetCart(string userId, CartRepository repo) {
             var cart = await repo.GetActiveCartByUserIdAsync(userId);
             if (cart == null)
             {
                 throw new NotFoundException("CRT-001", "El carrito no fue encontrado para este usuario.");
             }
             return Results.Ok(cart);
-        });
+        }
+        group.MapGet("/{userId}", GetCart);
 
         // Agregar item al carrito
-        group.MapPost("/items", async (AddToCartRequest request, CartRepository repo, IHttpClientFactory httpClientFactory) =>
-        {
+        async Task<IResult> AddItem(AddToCartRequest request, CartRepository repo, IHttpClientFactory httpClientFactory) {
             if (request.Quantity <= 0)
                 throw new BusinessRuleException("CRT-004", "Cantidad inválida.");
 
@@ -62,11 +61,11 @@ public static class CartEndpoints
             await repo.AddOrUpdateItemAsync(cartId, request.ProductId, request.Quantity, product.Precio);
 
             return Results.Ok(new { Message = "Producto agregado exitosamente al carrito." });
-        });
+        }
+        group.MapPost("/items", AddItem);
 
         // Eliminar item del carrito
-        group.MapDelete("/{userId}/items/{productId}", async (string userId, int productId, CartRepository repo) =>
-        {
+        async Task<IResult> DeleteItem(string userId, int productId, CartRepository repo) {
             var cart = await repo.GetActiveCartByUserIdAsync(userId);
             if (cart == null)
             {
@@ -78,7 +77,14 @@ public static class CartEndpoints
                 throw new BusinessRuleException("CRT-002", "El carrito ya fue procesado y no se puede modificar.");
             }
 
-            var itemExists = cart.Items.Any(i => i.ProductId == productId);
+
+            bool itemExists = false;
+            foreach (var i in cart.Items) {
+                if (i.ProductId == productId) {
+                    itemExists = true;
+                    break;
+                }
+            }
             if (!itemExists)
             {
                 throw new NotFoundException("CRT-004", "El producto no se encuentra en el carrito.");
@@ -86,7 +92,7 @@ public static class CartEndpoints
 
             await repo.RemoveItemAsync(cart.Id, productId);
             return Results.NoContent();
-        });
+        }
+        group.MapDelete("/{userId}/items/{productId}", DeleteItem);
     }
 }
-
