@@ -37,7 +37,7 @@ namespace Products.API.Services
         private Task<bool> VerificarSiExiste(string nombre, string categoria)
         {
             // Para probar que el error 409 funcione, podés cambiar false a true
-            return Task.FromResult(false);
+            return Task.FromResult(true);
         }
     }
 }
