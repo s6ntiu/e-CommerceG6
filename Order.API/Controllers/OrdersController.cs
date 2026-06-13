@@ -67,8 +67,8 @@ public class OrdersController : ControllerBase
             var prodJson = await prodRes.Content.ReadAsStringAsync();
             using var doc = JsonDocument.Parse(prodJson);
             var stock = doc.RootElement.GetProperty("stock").GetInt32();
-            var precio = doc.RootElement.GetProperty("precio").GetDecimal();
-            var nombre = doc.RootElement.GetProperty("nombre").GetString();
+            var precio = doc.RootElement.GetProperty("price").GetDecimal();
+            var nombre = doc.RootElement.GetProperty("name").GetString();
 
             if (stock < item.Cantidad)
                 throw new BusinessRuleException("ORD-005", $"Stock insuficiente para '{nombre}'. Disponible: {stock}, solicitado: {item.Cantidad}."); 

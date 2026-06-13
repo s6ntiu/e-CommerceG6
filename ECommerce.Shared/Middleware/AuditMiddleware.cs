@@ -22,13 +22,16 @@ context.Request.Body.Position = 0;
 var originalResponseBody = context.Response.Body;
 using var memStream = new MemoryStream();
 context.Response.Body = memStream;
-await _next(context);
-memStream.Position = 0;
-var responseBody = await new StreamReader(memStream).ReadToEndAsync();
-memStream.Position = 0;
-await memStream.CopyToAsync(originalResponseBody);
-context.Response.Body = originalResponseBody;
-_logger.LogInformation("AUDIT {@Method} {@Path} {@StatusCode} {@RequestBody} {@ResponseBody}", context.Request.Method, context.Request.Path.Value, context.Response.StatusCode, TryParseJson(requestBody), TryParseJson(responseBody));
+try {
+    await _next(context);
+    memStream.Position = 0;
+    var responseBody = await new StreamReader(memStream).ReadToEndAsync();
+    memStream.Position = 0;
+    await memStream.CopyToAsync(originalResponseBody);
+    _logger.LogInformation("AUDIT {@Method} {@Path} {@StatusCode} {@RequestBody} {@ResponseBody}", context.Request.Method, context.Request.Path.Value, context.Response.StatusCode, TryParseJson(requestBody), TryParseJson(responseBody));
+} finally {
+    context.Response.Body = originalResponseBody;
+}
 }
 private static async Task<string> ReadBodyAsync(Stream body) { using var reader = new StreamReader(body, Encoding.UTF8, leaveOpen: true); return await reader.ReadToEndAsync(); }
 private static object? TryParseJson(string raw) { if (string.IsNullOrWhiteSpace(raw)) return null; try { return JsonSerializer.Deserialize<object>(raw); } catch { return raw; } }
