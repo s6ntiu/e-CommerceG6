@@ -11,8 +11,14 @@ namespace Order.API.Data;
 
 public class SqliteGuidTypeHandler : SqlMapper.TypeHandler<Guid>
 {
-    public override void SetValue(System.Data.IDbDataParameter parameter, Guid value) => parameter.Value = value.ToString();
-    public override Guid Parse(object value) => Guid.Parse((string)value);
+    public override void SetValue(System.Data.IDbDataParameter parameter, Guid value) 
+    { 
+        parameter.Value = value.ToString(); 
+    }
+    public override Guid Parse(object value) 
+    { 
+        return Guid.Parse((string)value); 
+    }
 }
 
 public class OrderRepository

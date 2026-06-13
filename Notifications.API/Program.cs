@@ -30,16 +30,6 @@ builder.Services.AddSingleton<DatabaseInitializer>();
 builder.Services.AddScoped<NotificationRepository>();
 
 
-// Registro de clientes HTTP
-
-builder.Services.AddHttpClient("UsersAPI", client => {
-    client.BaseAddress = new Uri("http://localhost:5002/");
-});
-
-builder.Services.AddHttpClient("ProductsAPI", client =>
-{
-    client.BaseAddress = new Uri("http://localhost:5001/");
-});
 
 void ConfigureUsersClient(HttpClient client) {
     client.BaseAddress = new Uri("http://localhost:5000/");
