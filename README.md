@@ -11,7 +11,7 @@ Trabajo Práctico desarrollado para la Construcción de Aplicaciones Informátic
 
 ---
 
-##Requisitos Previos y Configuración
+## Requisitos Previos y Configuración
 Herramientas:
 * SDK de .NET 9.0 o superior
 * Visual Studio 2022 o VS Code
