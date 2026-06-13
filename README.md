@@ -69,6 +69,11 @@ Error 403 - USR-004 - Superar intentos máximos
 
 ORDERS.API SCREENSHOTS
 
+Falla de Integración HTTP - Stock Insuficiente (ORD-005) 
+<img width="2012" height="1200" alt="image" src="https://github.com/user-attachments/assets/cb1f8ceb-ccf0-4d3c-b98a-3aa9fa0ffbbc" />
+<img width="1855" height="781" alt="image" src="https://github.com/user-attachments/assets/0b1cf6af-3072-40aa-ba4a-b26cf12aa941" />
+
+
 
 
 Products.API ScreenShots
