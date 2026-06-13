@@ -44,13 +44,6 @@ builder.Services.AddHealthChecks()
     .AddCheck<SqliteHealthCheck>("sqlite_status");
 
 
-
-builder.Services.AddHttpClient("UsersAPI", client =>
-{
-    // Cambia el puerto según corresponda en tu entorno
-    client.BaseAddress = new Uri("https://localhost:7000/");
-});
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

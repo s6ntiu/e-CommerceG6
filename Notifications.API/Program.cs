@@ -29,6 +29,7 @@ builder.Services.AddExceptionHandler<UnprocessableEntityExceptionHandler>();
 builder.Services.AddSingleton<DatabaseInitializer>();
 builder.Services.AddScoped<NotificationRepository>();
 
+
 // Registro de clientes HTTP
 
 builder.Services.AddHttpClient("UsersAPI", client => {
@@ -40,9 +41,24 @@ builder.Services.AddHttpClient("ProductsAPI", client =>
     client.BaseAddress = new Uri("http://localhost:5001/");
 });
 
+void ConfigureUsersClient(HttpClient client) {
+    client.BaseAddress = new Uri("http://localhost:5000/");
+}
+builder.Services.AddHttpClient("UsersAPI", ConfigureUsersClient);
+
+
 builder.Services.AddHealthChecks()
     .AddCheck<ApiStatusCheck>("api_status")
     .AddCheck<SqliteHealthCheck>("sqlite_status");
+
+
+
+// Registro de clientes HTTP
+void ConfigureProductsClient(HttpClient client) {
+    client.BaseAddress = new Uri("http://localhost:5000/");
+}
+builder.Services.AddHttpClient("ProductsAPI", ConfigureProductsClient);
+
 
 
 var app = builder.Build();
@@ -53,7 +69,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseExceptionHandler(opt => { });
+void ConfigureExceptionHandler(IApplicationBuilder opt) { }
+app.UseExceptionHandler(ConfigureExceptionHandler);
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<AuditMiddleware>();
 

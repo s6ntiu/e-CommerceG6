@@ -9,8 +9,12 @@ namespace Products.API.Data;
 public class ProductRepository
 {
 private readonly IConfiguration _config;
-public ProductRepository(IConfiguration config) => _config = config;
-private SqliteConnection CreateConnection() => new(_config.GetConnectionString("DefaultConnection") ?? "Data Source=products.db");
+public ProductRepository(IConfiguration config) {
+    _config = config;
+}
+private SqliteConnection CreateConnection() {
+    return new SqliteConnection(_config.GetConnectionString("DefaultConnection") ?? "Data Source=products.db");
+}
 public async Task<IEnumerable<Product>> GetAllAsync()
 {
 using var conn = CreateConnection();
