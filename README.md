@@ -18,14 +18,18 @@ Herramientas:
 * Herramienta o Visor de SQLite (opcional, para auditar los archivos `.db`)
 
 ### Configuración del Inicio Múltiple en Visual Studio
-Para ejecutar el flujo completo del backend en paralelo:
-En la barra de tareas 
+**Para ejecutar el flujo completo del backend en paralelo**
+
+En la barra de tareas:
+
 <img width="1225" height="66" alt="image" src="https://github.com/user-attachments/assets/5965fdda-b69b-4c7c-8908-1f79975a446b" />
 
 Desplegamos el menú entre el botón verde Start y el TestNotiplusUser y seleccionamos en configurar Startup Projects
+
 <img width="213" height="234" alt="image" src="https://github.com/user-attachments/assets/adfb9a36-bbc3-4677-8fac-2a66b2dc1519" />
 
 Una vez en el menú creamos uno nuevo y seleccionamos Start en todas menos ECommerce.shared
+
 <img width="799" height="541" alt="image" src="https://github.com/user-attachments/assets/d385c14a-c980-48b4-9fa3-78b2e3951e64" />
 
 Una vez tenemos este perfil, lo guardamos tocando aplicar y lo iniciamos utilizando el boton de Start en la barra de herramientas.
