@@ -27,6 +27,7 @@ Herramientas:
 **git clone https://github.com/s6ntiu/e-CommerceG6**
 
 Ir a la carpeta donde clonamos el proyecto e iniciar la solución ECommerce.slnx 
+
 Una vez en el proyecto, en la barra de tareas:
 
 <img width="1225" height="66" alt="image" src="https://github.com/user-attachments/assets/5965fdda-b69b-4c7c-8908-1f79975a446b" />
