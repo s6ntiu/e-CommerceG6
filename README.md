@@ -1,5 +1,4 @@
-# Sistema de E-Commerce - Microservicios (Grupo 6)
-
+# E-COMMERCE - GRUPO 6 - CAI
 Trabajo Práctico desarrollado para Construcción de Aplicaciones Informáticas en el primer cuatrimestre de 2026. 
 E-Commerce con una arquitectura orientada a microservicios utilizando .NET 9, SQLite para una DB independiente por servicio, logging, trazabilidad de peticiones, Health Checks, y un API gateway. 
 Integrado con Swagger. Ofrece un manejo estandarizado de excepciones detalladas en las consignas del trabajo práctico y ejemplificadas en el mismo README.
