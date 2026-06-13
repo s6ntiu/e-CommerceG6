@@ -113,6 +113,9 @@ Falla de Integración HTTP - Stock Insuficiente (ORD-005)
 <img width="2012" height="1200" alt="image" src="https://github.com/user-attachments/assets/cb1f8ceb-ccf0-4d3c-b98a-3aa9fa0ffbbc" />
 <img width="1855" height="781" alt="image" src="https://github.com/user-attachments/assets/0b1cf6af-3072-40aa-ba4a-b26cf12aa941" />
 
+Transición de Estado Inválida (ORD-006)
+<img width="1812" height="1296" alt="image" src="https://github.com/user-attachments/assets/ccfb314e-ff74-4b4a-8c89-6ae7d2cf3420" />
+<img width="1810" height="762" alt="image" src="https://github.com/user-attachments/assets/16459b95-6b48-4a9e-b291-5ae9097def98" />
 
 
 
