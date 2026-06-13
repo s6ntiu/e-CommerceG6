@@ -5,7 +5,6 @@ using Products.API.DTOs;
 using Products.API.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ECommerce.Shared.Exceptions;
 namespace Products.API.Data;
 public class ProductRepository
 {
@@ -29,10 +28,6 @@ return await conn.QuerySingleOrDefaultAsync<Product>("SELECT id, name, descripti
 public async Task<Product> CreateAsync(CreateProductRequest request)
 {
 using var conn = CreateConnection();
-var exists = await conn.ExecuteScalarAsync<int>("SELECT COUNT(1) FROM products WHERE name = @Name", new { request.Name });
-if (exists > 0) {
-    throw new BusinessRuleException("PRD-003", $"Ya existe un producto con el nombre '{request.Name}'.");
-}
 var id = await conn.ExecuteScalarAsync<int>("INSERT INTO products (name, description, price, stock) VALUES (@Name, @Description, @Price, @Stock); SELECT last_insert_rowid();", request);
 return (await GetByIdAsync(id))!;
 }
