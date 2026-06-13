@@ -32,8 +32,9 @@ Una vez en el menú creamos uno nuevo y seleccionamos Start en todas menos EComm
 
 <img width="799" height="541" alt="image" src="https://github.com/user-attachments/assets/d385c14a-c980-48b4-9fa3-78b2e3951e64" />
 
-**Una vez tenemos este perfil, lo guardamos tocando aplicar y lo iniciamos utilizando el boton de Start en la barra de herramientas, o utilizamos el siguiente comando en una terminal de powershell
-dotnet run --launch-profile "Nombre_Perfil"**
+**Una vez tenemos este perfil, lo guardamos tocando aplicar y lo iniciamos utilizando el boton de Start en la barra de herramientas, o utilizamos el siguiente comando en una terminal de powershell**
+
+**dotnet run --launch-profile "Nombre_Perfil"**
 
 ---
 ## Diagrama de arquitectura del proyecto
