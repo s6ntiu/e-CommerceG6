@@ -9,8 +9,19 @@ using System.Threading.Tasks;
 
 namespace Order.API.Data;
 
+public class SqliteGuidTypeHandler : SqlMapper.TypeHandler<Guid>
+{
+    public override void SetValue(System.Data.IDbDataParameter parameter, Guid value) => parameter.Value = value.ToString();
+    public override Guid Parse(object value) => Guid.Parse((string)value);
+}
+
 public class OrderRepository
 {
+    static OrderRepository()
+    {
+        SqlMapper.AddTypeHandler(new SqliteGuidTypeHandler());
+    }
+
     private readonly IConfiguration _config;
     public OrderRepository(IConfiguration config) {
         _config = config;
