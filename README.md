@@ -1,4 +1,52 @@
-USERS.API SCREENSHOTS
+```mermaid 
+graph TD
+    %% Estilos de los bloques con alto contraste
+    classDef usuario fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#000000;
+    classDef entrada fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000000;
+    classDef api fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000000;
+    classDef db fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000000;
+
+    %% Nodos principales
+    Cliente[Cliente / Navegador]:::usuario
+    Gateway[ECommerce.Gateway <br> Puerto: 7000]:::entrada
+    
+    UserAPI[User.API <br>5002]:::api
+    ProdAPI[Products.API <br>5001]:::api
+    CartAPI[Cart.API <br>5000]:::api
+    OrderAPI[Order.API <br>5000]:::api
+    NotifAPI[Notifications.API <br>5000]:::api
+
+    UserDB[(user.db)]:::db
+    ProdDB[(products.db)]:::db
+    CartDB[(cart.db)]:::db
+    OrderDB[(order.db)]:::db
+    NotifDB[(notifications.db)]:::db
+
+    %% Flujo 1: Entrada Externa de la Solicitud
+    Cliente -->|1. Ingresa la solicitud HTTP| Gateway
+    Gateway -->|2. Rutea segun la URL| UserAPI
+    Gateway -->|2. Rutea segun la URL| ProdAPI
+    Gateway -->|2. Rutea segun la URL| CartAPI
+    Gateway -->|2. Rutea segun la URL| OrderAPI
+
+    %% Flujo 2: Comunicacion Interna (Validaciones Directas)
+    CartAPI -->|Cart consulta stock| ProdAPI
+    CartAPI -->|Cart consulta usuario| UserAPI
+    
+    OrderAPI -->|Consulta stock y precio| ProdAPI
+    OrderAPI -->|Order consulta usuario| UserAPI
+    
+    NotifAPI -->|Noti consulta usuario| UserAPI
+
+    %% Flujo 3: Persistencia
+    UserAPI --> UserDB
+    ProdAPI --> ProdDB
+    CartAPI --> CartDB
+    OrderAPI --> OrderDB
+    NotifAPI --> NotifDB
+```
+    
+    USERS.API SCREENSHOTS
 
 Registro exitoso
 <img width="1276" height="670" alt="image" src="https://github.com/user-attachments/assets/379bce8d-a05e-4ede-98fa-c223bb03b27f" />
