@@ -1,13 +1,15 @@
 # Sistema de E-Commerce - Microservicios (Grupo 6)
 
-Trabajo Práctico desarrollado para la Construcción de Aplicaciones Informáticas en el primer cuatrimestre de 2026. E-Commerce con una arquitectura orientada a microservicios utilizando .NET 9, SQLite, logging, trazabilidad de peticiones, y un API gateway
+Trabajo Práctico desarrollado para Construcción de Aplicaciones Informáticas en el primer cuatrimestre de 2026. 
+E-Commerce con una arquitectura orientada a microservicios utilizando .NET 9, SQLite para una DB independiente por servicio, logging, trazabilidad de peticiones, Health Checks, y un API gateway. 
+Integrado con Swagger. Ofrece un manejo estandarizado de excepciones detalladas en las consignas del trabajo práctico y ejemplificadas en el mismo README.
 
 ---
 
 ## Integrantes
-* **Leandro Salzberg**
-* **Santiago Ubeid**
-* **Mariano Fioretti**
+* **Leandro Salzberg**: Order.API, Cart.API
+* **Santiago Ubeid**: User.API, Notifications.API
+* **Mariano Fioretti**: ECommerce.Gateway, ECommerce.Shared, Products.API.
 
 ---
 
@@ -19,6 +21,8 @@ Herramientas:
 
 ### Configuración del Inicio Múltiple en Visual Studio
 **Para ejecutar el flujo completo del backend en paralelo**
+
+**Para empezar, hay que clonar el repositorio utilizando git clone https://github.com/s6ntiu/e-CommerceG6"**
 
 En la barra de tareas:
 
@@ -37,6 +41,18 @@ Una vez en el menú creamos uno nuevo y seleccionamos Start en todas menos EComm
 **dotnet run --launch-profile "Nombre_Perfil"**
 
 ---
+
+### Endpoints Principales y Puertos Locales
+
+| Servicio | Swagger UI | Health Check |
+| :--- | :--- | :--- |
+| **Users API** | [http://localhost:5002/swagger](http://localhost:5002/swagger) | [http://localhost:5002/health](http://localhost:5002/health) |
+| **Products API** | [http://localhost:5001/swagger](http://localhost:5001/swagger) | [http://localhost:5001/health](http://localhost:5001/health) |
+| **Cart API** | [http://localhost:5003/swagger](http://localhost:5003/swagger) | [http://localhost:5003/health](http://localhost:5003/health) |
+| **Orders API** | [http://localhost:5004/swagger](http://localhost:5004/swagger) | [http://localhost:5004/health](http://localhost:5004/health) |
+| **Notifications API** | [http://localhost:5005/swagger](http://localhost:5005/swagger) | [http://localhost:5005/health](http://localhost:5005/health) |
+
+---
 ## Diagrama de arquitectura del proyecto
 ```mermaid 
 graph TD
@@ -48,13 +64,13 @@ graph TD
 
     %% Nodos principales
     Cliente[Cliente / Navegador]:::usuario
-    Gateway[ECommerce.Gateway <br> Puerto: 7000]:::entrada
+    Gateway[ECommerce.Gateway <br> Puerto: 5000/7000]:::entrada
     
     UserAPI[User.API <br>5002]:::api
     ProdAPI[Products.API <br>5001]:::api
-    CartAPI[Cart.API <br>5000]:::api
-    OrderAPI[Order.API <br>5000]:::api
-    NotifAPI[Notifications.API <br>5000]:::api
+    CartAPI[Cart.API <br>5003]:::api
+    OrderAPI[Order.API <br>5004]:::api
+    NotifAPI[Notifications.API <br>5005]:::api
 
     UserDB[(user.db)]:::db
     ProdDB[(products.db)]:::db
@@ -72,9 +88,13 @@ graph TD
     %% Flujo 2: Comunicacion Interna (Validaciones Directas)
     CartAPI -->|Cart consulta stock| ProdAPI
     CartAPI -->|Cart consulta usuario| UserAPI
+
+    ProdAPI -->|Prod verifica orden| OrderAPI
     
     OrderAPI -->|Consulta stock y precio| ProdAPI
     OrderAPI -->|Order consulta usuario| UserAPI
+    OrderAPI -->|Order notifica orden creada| NotifAPI
+    OrderAPI -->|Order vacía carrito| CartAPI
     
     NotifAPI -->|Noti consulta usuario| UserAPI
 
