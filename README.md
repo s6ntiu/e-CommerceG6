@@ -1,3 +1,39 @@
+# Sistema de E-Commerce - Microservicios (Grupo 6)
+
+Trabajo Práctico desarrollado para la Construcción de Aplicaciones Informáticas en el primer cuatrimestre de 2026. E-Commerce con una arquitectura orientada a microservicios utilizando .NET 9, SQLite, logging, trazabilidad de peticiones, y un API gateway
+
+---
+
+## Integrantes
+* **Leandro Salzberg**
+* **Santiago Ubeid**
+* **Mariano Fioretti**
+
+---
+
+##Requisitos Previos y Configuración
+Herramientas:
+* SDK de .NET 9.0 o superior
+* Visual Studio 2022 o VS Code
+* Herramienta o Visor de SQLite (opcional, para auditar los archivos `.db`)
+
+### Configuración del Inicio Múltiple en Visual Studio
+Para ejecutar el flujo completo del backend en paralelo:
+En la barra de tareas 
+<img width="1225" height="66" alt="image" src="https://github.com/user-attachments/assets/5965fdda-b69b-4c7c-8908-1f79975a446b" />
+
+Desplegamos el menú entre el botón verde Start y el TestNotiplusUser y seleccionamos en configurar Startup Projects
+<img width="213" height="234" alt="image" src="https://github.com/user-attachments/assets/adfb9a36-bbc3-4677-8fac-2a66b2dc1519" />
+
+Una vez en el menú creamos uno nuevo y seleccionamos Start en todas menos ECommerce.shared
+<img width="799" height="541" alt="image" src="https://github.com/user-attachments/assets/d385c14a-c980-48b4-9fa3-78b2e3951e64" />
+
+Una vez tenemos este perfil, lo guardamos tocando aplicar y lo iniciamos utilizando el boton de Start en la barra de herramientas.
+
+**Para hacerlo por consola**
+
+---
+## Diagrama de arquitectura del proyecto
 ```mermaid 
 graph TD
     %% Estilos de los bloques con alto contraste
@@ -46,7 +82,7 @@ graph TD
     NotifAPI --> NotifDB
 ```
     
-    USERS.API SCREENSHOTS
+### USERS.API SCREENSHOTS
 
 Registro exitoso
 <img width="1276" height="670" alt="image" src="https://github.com/user-attachments/assets/379bce8d-a05e-4ede-98fa-c223bb03b27f" />
@@ -67,7 +103,7 @@ Error 403 - USR-004 - Superar intentos máximos
 
 
 
-ORDERS.API SCREENSHOTS
+### ORDERS.API SCREENSHOTS
 
 Falla de Integración HTTP - Stock Insuficiente (ORD-005) 
 <img width="2012" height="1200" alt="image" src="https://github.com/user-attachments/assets/cb1f8ceb-ccf0-4d3c-b98a-3aa9fa0ffbbc" />
