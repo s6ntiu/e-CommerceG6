@@ -119,5 +119,17 @@ Transición de Estado Inválida (ORD-006)
 
 
 
-Products.API ScreenShots
-<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/e4e62ea6-c247-4363-81a3-ed0f2381b997" />
+### Products.API ScreenShots
+
+Producto Duplicado (PRD-003)
+<img width="1792" height="1298" alt="image" src="https://github.com/user-attachments/assets/fa63573a-5701-46ec-9637-4bf8cec01dd6" />
+<img width="1782" height="778" alt="image" src="https://github.com/user-attachments/assets/75f450e1-f45b-4641-8c6b-4d139940c4b3" />
+
+
+### Cart.Api ScreenShots
+
+Cantidad Inválida en Carrito (CRT-004)
+<img width="1785" height="1193" alt="image" src="https://github.com/user-attachments/assets/35cd4ad2-caa9-40c9-94d3-edbeed892bdc" />
+<img width="1774" height="775" alt="image" src="https://github.com/user-attachments/assets/5706a144-b64a-469a-94a5-02f58d09160f" />
+
+
