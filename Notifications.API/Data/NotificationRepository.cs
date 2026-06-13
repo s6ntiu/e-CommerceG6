@@ -16,8 +16,9 @@ namespace Notifications.API.Data
             _config = config;
         }
 
-        private SqliteConnection CreateConnection() =>
-            new(_config.GetConnectionString("DefaultConnection") ?? "Data Source=notifications.db");
+        private SqliteConnection CreateConnection() {
+            return new SqliteConnection(_config.GetConnectionString("DefaultConnection") ?? "Data Source=notifications.db");
+        }
 
         public async Task<IEnumerable<Notification>> GetByUserIdAsync(string userId) // <-- string aquí
         {
